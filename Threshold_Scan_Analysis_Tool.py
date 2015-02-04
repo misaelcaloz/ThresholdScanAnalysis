@@ -35,7 +35,9 @@ rootFileName=sys.argv[2]
 
 outFile=TFile(rootFileName,"RECREATE")
 GraphDir = outFile.mkdir("Graphs")
-
+HighThrDir = outFile.mkdir("High thresh")
+HighSigmaDir = outFile.mkdir("High sigma")
+HighChi2Dir = outFile.mkdir("High Chi2")
 # -------- Reset dictionaries and lists
 
 TDAC_value_dic = {}
@@ -55,7 +57,6 @@ injToElectrons=1660./.39	# WARNING: different depending the version of the chip:
 
 # -------- Fill dictionaries with function AnalyseThresholdScan() in functions.pyc
 
-
 DIC_AnalyseThresholdScan = AnalyseThresholdScan(FileDataThrScan)
 TDAC_value_dic = DIC_AnalyseThresholdScan[0]
 Threshold_value_dic = DIC_AnalyseThresholdScan[1]
@@ -64,15 +65,6 @@ Chi2_value_dic = DIC_AnalyseThresholdScan[3]
 Scurve_plot_dic = DIC_AnalyseThresholdScan[4]
 Data_pointsX_dic = DIC_AnalyseThresholdScan[5]
 Data_pointsY_dic = DIC_AnalyseThresholdScan[6]
-
-#TDAC_value_dic = AnalyseThresholdScan(FileDataThrScan)[0]
-#Threshold_value_dic = AnalyseThresholdScan(FileDataThrScan)[1]
-#Sigma_value_dic = AnalyseThresholdScan(FileDataThrScan)[2]
-#Chi2_value_dic = AnalyseThresholdScan(FileDataThrScan)[3]
-#Scurve_plot_dic = AnalyseThresholdScan(FileDataThrScan)[4]
-#Data_pointsX_dic = AnalyseThresholdScan(FileDataThrScan)[5]
-#Data_pointsY_dic = AnalyseThresholdScan(FileDataThrScan)[6]
-
 
 # -------- Set histograms and fitting function
 
@@ -105,9 +97,23 @@ for r in range(24):
 		graph = Scurve_plot_dic["r"+str(r)+"_c"+str(c)+""]
 		Xaxis = graph.GetXaxis()
 		Xaxis.SetLimits(0,2000)
-		graph.GetHistogram().SetMaximum(1.2)          
+		graph.GetHistogram().SetMaximum(2)          
 		graph.GetHistogram().SetMinimum(0)
+		outFile.cd("Graphs")
 		graph.Write()
+		
+		# select data
+		
+		if Threshold_value_dic["r"+str(r)+"_c"+str(c)+""] > 800:
+			outFile.cd("High thresh")
+			graph.Write()
+		if Sigma_value_dic["r"+str(r)+"_c"+str(c)+""] > 100:
+			outFile.cd("High sigma")
+			graph.Write()			
+		if Chi2_value_dic["r"+str(r)+"_c"+str(c)+""] > 0.01:
+			outFile.cd("High Chi2")
+			graph.Write()			
+		
 		
 		if cnt ==0:	
 			graph.Draw("AC")
@@ -117,6 +123,7 @@ for r in range(24):
 		cnt += 1
 		graphList.append(graph)
 gPad.Update()
+
 # ------- Create histograms
 
 for r in range(24):
@@ -158,7 +165,6 @@ eyeDiagram.SetAxisRange(0.,1.4,"Y")
 
 # - thresh 2D
 
-
 thresh2D.SetTitleSize(0.025,"xyz")
 thresh2D.SetTitleOffset(1.3,"z")
 
@@ -194,10 +200,7 @@ TDAC2D.GetZaxis().SetRangeUser(-1, 16)
 
 sigma1D.Rebin()
 
-
-
-# ------- Create plots in canvas
-
+# ------- Create canvas
 
 Canv4Plots = ROOT.TCanvas("Thresh_2D","Thresh_2D",800,600)
 ROOT.SetOwnership(Canv4Plots,False) # TODO: DOESN'T WORK...
@@ -301,9 +304,5 @@ Canv2DThresh
 #CanvScurves.Close()
 
 #raw_input("Press Enter to continue...")
-
-
-# changement TEST GIT HUB
-
 
 
