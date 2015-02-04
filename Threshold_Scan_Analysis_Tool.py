@@ -14,7 +14,8 @@
 # --------packages 
 
 import sys
-sys.path.insert(0, "/Users/misaelcaloz/Documents/CERN master thesis/python scripts/functions")
+sys.path.insert(0, "/Users/misaelcaloz/Documents/GitHub/FunctionsRepository")
+#sys.path.insert(0, "/Users/misaelcaloz/Documents/CERN master thesis/python scripts/functions")
 sys.path.append("/usr/local/lib/root")
 #import ROOT
 from ROOT import gROOT, TCanvas, TF1, TGraph, TLegend, TMath, TMultiGraph, TFile, TH2F, TH1F, TDirectory,TH2D, TH1D, TLatex, gPad, TH2I, TLine, TAxis, kTRUE, gStyle, TKey, THStack, kRed, kOrange, kBlue, kGreen
@@ -303,3 +304,6 @@ Canv2DThresh
 
 
 # changement TEST GIT HUB
+
+
+
