@@ -53,11 +53,11 @@ graphList = []
 
 #-------- conversion factor injection -> electrons
 
-injToElectrons=1660./.39	# WARNING: different depending the version of the chip: v2: 1660/0.39 v4:1660/0.25
+injToElectrons=1660./.25	# WARNING: different depending the version of the chip: v2: 1660/0.39 v4:1660/0.25
 
 # -------- Fill dictionaries with function AnalyseThresholdScan() in functions.pyc
 
-DIC_AnalyseThresholdScan = AnalyseThresholdScan(FileDataThrScan)
+DIC_AnalyseThresholdScan = AnalyseThresholdScanV4(FileDataThrScan)
 TDAC_value_dic = DIC_AnalyseThresholdScan[0]
 Threshold_value_dic = DIC_AnalyseThresholdScan[1]
 Sigma_value_dic = DIC_AnalyseThresholdScan[2]
@@ -69,14 +69,14 @@ Data_pointsY_dic = DIC_AnalyseThresholdScan[6]
 # -------- Set histograms and fitting function
 
 myfit = TF1("myfit", "[0]+0.5*TMath::Erf([1]*([2]+x))",-1.,3000.)
-TDAC2D = TH2F("TDAC2D", "TDAC 2D plot;#Row;#Column;Threshold [e]",24,0,24, 36,12,48)
+TDAC2D = TH2F("TDAC2D", "TDAC 2D plot;#Row;#Column;Threshold [e]",12,0,12, 24,24,48)
 TDAC1D = TH1F("TDACDist", "TDAC distribution;Threshold [e];nb of pixels", 16,0, 16)
-thresh2D = TH2F("thresh2D", "Thresh2D;#Row;#Column;Threshold [e]",24,0,24, 36,12,48)
+thresh2D = TH2F("thresh2D", "Thresh2D;#Row;#Column;Threshold [e]",12,0,12, 24,24,48)
 thresh1D = TH1F("threshDist", "Threshold distribution;Threshold [e];nb of pixels", 300,-.1, 4000)
-sigma2D = TH2F("sigma2D", "Sigma 2D plot;#Row;#Column;Sigma [e]",24,0,24, 36,12,48)
+sigma2D = TH2F("sigma2D", "Sigma 2D plot;#Row;#Column;Sigma [e]",12,0,12, 24,24,48)
 sigma1D = TH1F("sigmaDist", "Sigma distribution;Sigma [e];nb of pixels", 300,-.1, 500)
 chi2_1D = TH1F("chi2Dist", "Chi2 distribution; ;nb of pixels", 300,0, 1)
-chi2_2D = TH2F("chi2_2D", "Chi2 2D plot;#Row;#Column;chi2",24,0,24, 36,12,48)
+chi2_2D = TH2F("chi2_2D", "Chi2 2D plot;#Row;#Column;chi2",12,0,12, 24,24,48)
 correlation = TH2F("correlation", "Threshold vs TDAC;TDAC;Threshold [e]",16,0,16, 50,0,2000)
 eyeDiagram = TH2D("eyeDiagram","S-curves eye diagram;injection [e];Probe",69*2/3,0,0.69*injToElectrons*2/3,128,0,1.5) 
 
@@ -92,8 +92,8 @@ CanvScurves.SetFillColor(0)
 CanvScurves.cd()
 
 cnt = 0
-for r in range(24):
-	for c in range(12,48):
+for r in range(12):
+	for c in range(24,48):
 		graph = Scurve_plot_dic["r"+str(r)+"_c"+str(c)+""]
 		Xaxis = graph.GetXaxis()
 		Xaxis.SetLimits(0,2000)
@@ -126,8 +126,8 @@ gPad.Update()
 
 # ------- Create histograms
 
-for r in range(24):
-	for c in range(12,48):
+for r in range(12):
+	for c in range(24,48):
 		TDAC_value = TDAC_value_dic["r"+str(r)+"_c"+str(c)+""]
 		Threshold_value = Threshold_value_dic["r"+str(r)+"_c"+str(c)+""]
 		Sigma_value = Sigma_value_dic["r"+str(r)+"_c"+str(c)+""]
@@ -182,7 +182,7 @@ y_axis_thresh2D.CenterLabels(kTRUE)
 
 # - thresh 1D
 
-thresh1D.SetAxisRange(-1.,2000.,"X")
+thresh1D.SetAxisRange(0.,2000.,"X")
 thresh1D.SetFillColor(38)
 thresh1D.SetFillColorAlpha(38, 0.70)
 
